@@ -1,14 +1,16 @@
-package com.twansoftware.basedroid.singleton;
+package com.twansoftware.flashcardspro.singleton;
 
 import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.twansoftware.basedroid.entity.SamplePojo;
+import com.twansoftware.flashcardspro.entity.Flashcard;
+import com.twansoftware.flashcardspro.entity.FlashcardAppData;
+import com.twansoftware.flashcardspro.entity.FlashcardSet;
 import roboguice.util.Ln;
 
 import java.io.Serializable;
-import java.util.UUID;
+import java.util.ArrayList;
 
 /**
  * Author: achuinard
@@ -63,36 +65,26 @@ public class BasedroidStateManager {
 
     private Object loadObject(final String key, final Class clazz) {
         final String json = loadString(key);
+        Ln.d(json);
         return gson.fromJson(json, clazz);
     }
 
-    private static final String RANDOM_UUID_KEY = "random_uuid";
+    private static final String FLASHCARD_APP_DATA_KEY = "flashcard_data";
 
-    public void saveRandomUuid(final UUID uuid) {
-        saveString(RANDOM_UUID_KEY, uuid.toString());
+    public FlashcardAppData getAppData() {
+        if (sharedPreferences.contains(FLASHCARD_APP_DATA_KEY)) {
+            return (FlashcardAppData) loadObject(FLASHCARD_APP_DATA_KEY, FlashcardAppData.class);
+        } else {
+            final FlashcardAppData appData = new FlashcardAppData(new ArrayList<FlashcardSet>());
+            final FlashcardSet initialSet = new FlashcardSet("Sample Flashcard Set", FlashcardSet.Type.SINGLE_ANSWER);
+            initialSet.getFlashcards().add(new Flashcard("What is the best flashcard app in Google Play?", "Flashcard Maker Pro"));
+            appData.getFlashcardSets().add(initialSet);
+            saveAppData(appData);
+            return getAppData();
+        }
     }
 
-    public UUID getSavedRandomUuid() {
-        return UUID.fromString(loadString(RANDOM_UUID_KEY));
-    }
-
-    private static final String INTEGER_KEY = "integer_key";
-
-    public void saveStupidInteger(final int toSave) {
-        setIntegerPreference(INTEGER_KEY, toSave);
-    }
-
-    public Integer getSavedStupidInteger() {
-        return loadInteger(INTEGER_KEY);
-    }
-
-    private static final String IMPORTANT_POJO_KEY = "important_pojo";
-
-    public void saveImportantPojo(final SamplePojo samplePojo) {
-        saveObject(IMPORTANT_POJO_KEY, samplePojo);
-    }
-
-    public SamplePojo getSavedImportantPojo() {
-        return (SamplePojo) loadObject(IMPORTANT_POJO_KEY, SamplePojo.class);
+    public void saveAppData(final FlashcardAppData appData) {
+        saveObject(FLASHCARD_APP_DATA_KEY, appData);
     }
 }

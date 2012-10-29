@@ -1,4 +1,4 @@
-package com.twansoftware.basedroid.singleton;
+package com.twansoftware.flashcardspro.singleton;
 
 import com.google.inject.Singleton;
 import org.apache.http.HttpVersion;
