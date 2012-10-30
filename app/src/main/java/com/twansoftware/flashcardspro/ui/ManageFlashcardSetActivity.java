@@ -2,6 +2,8 @@ package com.twansoftware.flashcardspro.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockListActivity;
@@ -14,8 +16,9 @@ import com.twansoftware.flashcardspro.singleton.BasedroidStateManager;
 import roboguice.inject.InjectExtra;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
-public class ManageFlashcardSetActivity extends RoboSherlockListActivity implements MenuItem.OnMenuItemClickListener {
+public class ManageFlashcardSetActivity extends RoboSherlockListActivity implements MenuItem.OnMenuItemClickListener, AdapterView.OnItemClickListener {
     public static final String FLASHCARD_SET_EXTRA_KEY = "flashcard_set_extra_key";
 
     @Inject
@@ -31,8 +34,16 @@ public class ManageFlashcardSetActivity extends RoboSherlockListActivity impleme
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appData = stateManager.getAppData();
+        getListView().setOnItemClickListener(this);
         getSupportActionBar().setTitle(flashcardSet.getTitle());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appData = stateManager.getAppData();
+        final ArrayList<FlashcardSet> flashcardSets = appData.getFlashcardSets();
+        flashcardSet = flashcardSets.get(flashcardSets.indexOf(flashcardSet));
         setListAdapter(flashcardAdapter = new FlashcardAdapter(flashcardSet.getFlashcards(), this));
     }
 
@@ -50,26 +61,27 @@ public class ManageFlashcardSetActivity extends RoboSherlockListActivity impleme
     @Override
     public boolean onMenuItemClick(final MenuItem menuItem) {
         if (menuItem.getTitle().equals(getResources().getString(R.string.new_flashcard_action_bar_text))) {
-            sendToNewFlashcardScreen();
+            if (flashcardSet.getType() == FlashcardSet.Type.SINGLE_ANSWER) {
+                sendToEditFlashcardScreen(new Flashcard("", ""));
+            } else if (flashcardSet.getType() == FlashcardSet.Type.MULTIPLE_CHOICE) {
+                sendToEditFlashcardScreen(new Flashcard("", 4));
+            }
         } else if (menuItem.getTitle().equals(getResources().getString(R.string.quiz_flashcard_set_action_bar_text))) {
             // SEND TO PRINS ACTIVITY
         }
         return true;
     }
 
-    private void sendToNewFlashcardScreen() {
+    private void sendToEditFlashcardScreen(final Flashcard flashcardToEdit) {
         final Intent intent = new Intent(this, ManageFlashcardActivity.class);
-        final Flashcard value = new Flashcard("");
-        flashcardSet.getFlashcards().add(0, value);
-        flashcardAdapter.notifyDataSetChanged();
-        updateAppDataFlashcardSet();
-        intent.putExtra(ManageFlashcardActivity.FLASHCARD_TO_MANAGE_KEY, value);
-        startActivity(intent);
+        intent.putExtra(ManageFlashcardActivity.FLASHCARD_TO_MANAGE_KEY, flashcardToEdit);
+        intent.putExtra(ManageFlashcardActivity.FLASHCARD_PARENT_SET_KEY,  flashcardSet);
+        startActivityForResult(intent, 0);
     }
 
-    private void updateAppDataFlashcardSet() {
-        appData.getFlashcardSets().remove(flashcardSet);
-        appData.getFlashcardSets().add(flashcardSet);
-        stateManager.saveAppData(appData);
+    @Override
+    public void onItemClick(final AdapterView<?> adapterView, final View view, final int position, final long id) {
+        final Flashcard selectedFlashcard = (Flashcard) adapterView.getItemAtPosition(position);
+        sendToEditFlashcardScreen(selectedFlashcard);
     }
 }

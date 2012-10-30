@@ -36,9 +36,14 @@ public class MainActivity extends RoboSherlockListActivity implements MenuItem.O
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getListView().setOnItemClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         appData = stateManager.getAppData();
         setListAdapter(flashcardSetsAdapter = new FlashcardSetsAdapter(appData.getFlashcardSets(), this));
-        getListView().setOnItemClickListener(this);
     }
 
     @Override
