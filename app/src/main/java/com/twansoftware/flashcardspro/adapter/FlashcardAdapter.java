@@ -12,7 +12,7 @@ import com.twansoftware.flashcardspro.entity.Flashcard;
 import java.util.List;
 
 public class FlashcardAdapter extends BaseAdapter {
-    private final List<Flashcard> flashcards;
+    private List<Flashcard> flashcards;
     private final Context context;
 
     public FlashcardAdapter(final List<Flashcard> flashcards, final Context context) {
@@ -33,6 +33,10 @@ public class FlashcardAdapter extends BaseAdapter {
     @Override
     public long getItemId(final int i) {
         return getItem(i).hashCode();
+    }
+
+    public void setFlashcards(final List<Flashcard> flashcards) {
+        this.flashcards = flashcards;
     }
 
     @Override

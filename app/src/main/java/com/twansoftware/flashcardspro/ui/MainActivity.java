@@ -51,6 +51,11 @@ public class MainActivity extends RoboSherlockListActivity implements MenuItem.O
 
     @Override
     public boolean onMenuItemClick(final MenuItem menuItem) {
+        promptForNewFlashcardSet();
+        return true;
+    }
+
+    private void promptForNewFlashcardSet() {
         final Context context = this;
         final View nameAndTypeView = LayoutInflater.from(context).inflate(R.layout.pick_set_name_and_type_dialog, null, false);
         final EditText enterNameText = (EditText) nameAndTypeView.findViewById(R.id.pick_name_and_type_name);
@@ -80,7 +85,6 @@ public class MainActivity extends RoboSherlockListActivity implements MenuItem.O
                 .setNegativeButton("Cancel", onClickListener)
                 .setTitle("New Flashcard Set")
                 .create().show();
-        return true;
     }
 
     @Override

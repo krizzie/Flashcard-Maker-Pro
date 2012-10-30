@@ -3,7 +3,10 @@
     <string name="app_name">Flashcard Maker Pro</string>
 
     <!-- Action Bar Strings -->
+    <string name="manage_flashcard_action_bar_title_text">Edit Flashcard</string>
     <string name="new_flashcard_set_action_bar_text">New Flashcard Set</string>
+    <string name="new_flashcard_action_bar_text">New Flashcard</string>
+    <string name="quiz_flashcard_set_action_bar_text">Quiz</string>
 
     <!-- Flashcard Set Types -->
     <string-array name="flashcard_set_types">

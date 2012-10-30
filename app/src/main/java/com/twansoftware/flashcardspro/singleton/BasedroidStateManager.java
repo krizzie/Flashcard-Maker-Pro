@@ -11,6 +11,8 @@ import roboguice.util.Ln;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Author: achuinard
@@ -85,6 +87,20 @@ public class BasedroidStateManager {
     }
 
     public void saveAppData(final FlashcardAppData appData) {
+        Collections.sort(appData.getFlashcardSets(), new Comparator<FlashcardSet>() {
+            @Override
+            public int compare(final FlashcardSet flashcardSet, final FlashcardSet flashcardSet1) {
+                return flashcardSet.getDateCreated().compareTo(flashcardSet1.getDateCreated());
+            }
+        });
+        for (final FlashcardSet flashcardSet : appData.getFlashcardSets()) {
+            Collections.sort(flashcardSet.getFlashcards(), new Comparator<Flashcard>() {
+                @Override
+                public int compare(final Flashcard flashcard, final Flashcard flashcard1) {
+                    return flashcard.getDateMade().compareTo(flashcard1.getDateMade());
+                }
+            });
+        }
         saveObject(FLASHCARD_APP_DATA_KEY, appData);
     }
 }

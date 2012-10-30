@@ -59,13 +59,7 @@ public class FlashcardSet implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         final FlashcardSet that = (FlashcardSet) o;
-
-        if (flashcards != null ? !flashcards.equals(that.flashcards) : that.flashcards != null) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (type != that.type) return false;
-
-        return true;
+        return !(id != null ? !id.equals(that.id) : that.id != null);
     }
 
     @Override

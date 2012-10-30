@@ -12,6 +12,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ManageFlashcardSetActivity"/>
+        <activity android:name=".ui.ManageFlashcardActivity"/>
     </application>
 
 </manifest>

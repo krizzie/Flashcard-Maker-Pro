@@ -2,10 +2,12 @@ package com.twansoftware.flashcardspro.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Flashcard implements Serializable {
     private final String question;
     private final ArrayList<String> answers;
+    private final Date dateMade = new Date();
 
     public Flashcard(final String question) {
         this.question = question;
@@ -23,5 +25,9 @@ public class Flashcard implements Serializable {
 
     public ArrayList<String> getAnswers() {
         return answers;
+    }
+
+    public Date getDateMade() {
+        return dateMade;
     }
 }
